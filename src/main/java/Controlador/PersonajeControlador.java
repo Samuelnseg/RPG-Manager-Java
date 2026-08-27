@@ -1,13 +1,13 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package Controlador;
+import Modelo.PersonajeDAO;
+import Modelo.Personaje;
+import java.util.*;
 
-/**
- *
- * @author samue
- */
 public class PersonajeControlador {
+    private static PersonajeDAO pdao = new PersonajeDAO();
     
+    public static void obtenerPersonajes(){
+        ArrayList<Personaje> personajes = new ArrayList<>();
+        personajes = pdao.listaDePersonajes();
+    }
 }

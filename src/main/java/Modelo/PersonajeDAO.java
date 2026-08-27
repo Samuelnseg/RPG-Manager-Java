@@ -2,7 +2,7 @@ package Modelo;
 import java.util.*;
 
 public class PersonajeDAO {
-    private ArrayList<Personaje> listaPersonajes = new ArrayList<>();
+    private static ArrayList<Personaje> listaPersonajes = new ArrayList<>();
     
     public void agregarPersonaje(Personaje p){
         if (p.getVida() >= 0 && p.getNivel() >= 0){
