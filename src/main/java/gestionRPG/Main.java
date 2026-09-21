@@ -1,9 +1,11 @@
-package Vista;
+package gestionRPG;
 
-import Controlador.*;
+
+
+import gestionRPG.Controlador.PersonajeControlador;
 import io.javalin.Javalin;
 
-public class main {
+public class Main {
     public static void main(String[] arg) {
         Javalin app = Javalin.create().start(7070);
         

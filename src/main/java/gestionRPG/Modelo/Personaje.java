@@ -1,4 +1,4 @@
-package Modelo;
+package gestionRPG.Modelo;
 
 public class Personaje {
     private String nombre;

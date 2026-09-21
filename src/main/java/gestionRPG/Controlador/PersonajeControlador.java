@@ -1,6 +1,6 @@
-package Controlador;
-import Modelo.PersonajeDAO;
-import Modelo.Personaje;
+package gestionRPG.Controlador;
+import gestionRPG.Modelo.PersonajeDAO;
+import gestionRPG.Modelo.Personaje;
 import java.util.*;
 import io.javalin.http.Context;
 
