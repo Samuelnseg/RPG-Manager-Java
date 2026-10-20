@@ -6,9 +6,9 @@ import io.javalin.http.Context;
 
 public class PersonajeControlador {
     private static PersonajeDAO pdao = new PersonajeDAO();
+    private static ArrayList<Personaje> personajes = new ArrayList<>();
     
-    public static void obtenerPersonajes(Context ctx){
-        ArrayList<Personaje> personajes = new ArrayList<>();
+    public static void obtenerPersonajes(Context ctx){    
         personajes = pdao.listaDePersonajes();
         ctx.json(personajes);
     }
