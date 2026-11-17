@@ -1,12 +1,14 @@
 package gestionRPG;
 
+import gestionRPG.Controlador.PersonajeControlador;
 import io.javalin.Javalin;
 import gestionRPG.Modelo.*;
 import java.io.*;
 import java.nio.charset.StandardCharsets;
 
 public class Main {
-    private static PersonajeDAO dao = new PersonajeDAO();
+    private static PersonajeControlador pc = new PersonajeControlador();
+    
     public static void main(String[] args) {
         var app = Javalin.create(config -> {
         config.staticFiles.add("/public");
@@ -29,7 +31,7 @@ public class Main {
 
                 StringBuilder filas = new StringBuilder();
 
-                for (Personaje p : dao.obtenerPersonajes()) {
+                for (Personaje p : pc.obtener_personajes()) {
                     filas.append("<tr>");
                     filas.append("<td>").append(p.getNombre()).append("</td>");
                     filas.append("<td>").append(p.getClase()).append("</td>");
@@ -47,12 +49,11 @@ public class Main {
         });
 
         app.post("/personajes", ctx -> {
-            Personaje p = new Personaje();
-            p.setNombre(ctx.formParam("nombre"));
-            p.setClase(ctx.formParam("clase"));
-            p.setNivel(Integer.parseInt(ctx.formParam("nivel")));
-            p.setVida(Integer.parseInt(ctx.formParam("vida")));
-            dao.agregarPersonaje(p);
+            String nom = ctx.formParam("nombre");
+            String c = ctx.formParam("clase");
+            int n = Integer.parseInt(ctx.formParam("nivel"));
+            int v = Integer.parseInt(ctx.formParam("vida"));
+            String mensaje = pc.agregarPersonaje(nom, c, n, v);
             ctx.redirect("/personajes");
         });
     }
