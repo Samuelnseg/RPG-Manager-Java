@@ -1,52 +1,25 @@
+// Archivo: rpg_manager_multinivel_javalin/src/main/java/gestionrpg/modelo/Personaje.java (fragmento)
+
 package gestionRPG.Modelo;
+import java.math.BigDecimal;
 
-public class Personaje {
-    String nombre;
-    String clase;
-    int nivel;
-    int vida;
-    public Personaje(String nombre, String clase, int nivel, int vida){
+abstract class Personaje{
+    protected int id;
+    protected String nombre;
+    protected int nivel;
+    protected int vida;
+    protected int ataque;
+    protected BigDecimal oro;
+
+    protected Personaje(Integer id, String nombre, int nivel, int vida, int ataque, BigDecimal oro) {
+        this.id = id;
         this.nombre = nombre;
-        this.clase = clase;
         this.nivel = nivel;
         this.vida = vida;
-    }
-    
-    public Personaje(){
-        
-    }
+        this.ataque = ataque;
+        this.oro = oro;
+        }
 
-    public String getNombre() {
-        return nombre;
-    }
-
-    public void setNombre(String nombre) {
-        this.nombre = nombre;
-    }
-
-    public String getClase() {
-        return clase;
-    }
-
-    public void setClase(String clase) {
-        this.clase = clase;
-    }
-
-    public int getNivel() {
-        return nivel;
-    }
-
-    public void setNivel(int nivel) {
-        this.nivel = nivel;
-    }
-
-    public int getVida() {
-        return vida;
-    }
-
-    public void setVida(int vida) {
-        this.vida = vida;
-    }
-    
-    
+    /** "Guerrero", "Mago" o "Arquero": lo define cada subclase. */
+    public abstract String getClase();
 }
