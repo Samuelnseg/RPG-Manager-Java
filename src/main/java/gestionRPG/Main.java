@@ -1,60 +1,55 @@
 package gestionRPG;
 
 import gestionRPG.Controlador.PersonajeControlador;
+import gestionRPG.Repositorio.PersonajeRepository;
+import gestionRPG.Repositorio.RepositoryFactory;
+import gestionRPG.Servicio.PersonajeService;
 import io.javalin.Javalin;
-import gestionRPG.Modelo.*;
-import java.io.*;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.Reader;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.Properties;
 
+/**
+ * Punto de arranque del RPG Manager (Javalin).
+ *
+ * 1. Lee config.properties (copia config.example.properties y pon tus datos).
+ * 2. La fábrica crea el repositorio que diga la clave "repositorio".
+ * 3. El Service recibe ese repositorio por el constructor.
+ * 4. El controlador recibe el Service y registra las rutas.
+ */
 public class Main {
-    private static PersonajeControlador pc = new PersonajeControlador();
-    
+
+    public static Properties cargarConfiguracion() {
+        Path ruta = Path.of("config.properties");    // raíz del proyecto en NetBeans
+        if (!Files.exists(ruta)) {
+            System.err.println("No existe config.properties en " + ruta.toAbsolutePath().getParent()
+                    + ". Copia config.example.properties como config.properties y pon tus datos.");
+            System.exit(1);
+        }
+        Properties cfg = new Properties();
+        try (Reader lector = new InputStreamReader(Files.newInputStream(ruta), StandardCharsets.UTF_8)) {
+            cfg.load(lector);
+        } catch (IOException e) {
+            throw new IllegalStateException("No se pudo leer config.properties", e);
+        }
+        return cfg;
+    }
+
     public static void main(String[] args) {
-        var app = Javalin.create(config -> {
-        config.staticFiles.add("/public");
-        }).start(7000);
-        
+        Properties cfg = cargarConfiguracion();
+        PersonajeRepository repositorio = RepositoryFactory.crear(cfg);     // aquí se elige el motor
+        PersonajeService service = new PersonajeService(repositorio);       // inyección por constructor
+        PersonajeControlador controlador = new PersonajeControlador(service, cfg.getProperty("repositorio"));
 
-        app.get("/personajes", ctx -> {
-            try (InputStream archivo = Main.class
-            .getResourceAsStream("/public/index.html")) {
+        Javalin app = Javalin.create();
+        controlador.registrarRutas(app);
+        app.start(7070);
 
-                if (archivo == null) {
-                    ctx.status(404).result("No se encontró index.html");
-                    return;
-                }
-
-                String html = new String(
-                    archivo.readAllBytes(),
-                    StandardCharsets.UTF_8
-                );
-
-                StringBuilder filas = new StringBuilder();
-
-                for (Personaje p : pc.obtener_personajes()) {
-                    filas.append("<tr>");
-                    filas.append("<td>").append(p.getNombre()).append("</td>");
-                    filas.append("<td>").append(p.getClase()).append("</td>");
-                    filas.append("<td>").append(p.getNivel()).append("</td>");
-                    filas.append("<td>").append(p.getVida()).append("</td>");
-                    filas.append("</tr>");
-                }
-
-                html = html.replace("<!-- PERSONAJES -->", filas.toString());
-                ctx.html(html);
-
-            } catch (IOException e) {
-                ctx.status(500).result("Error al cargar la página");
-            }
-        });
-
-        app.post("/personajes", ctx -> {
-            String nom = ctx.formParam("nombre");
-            String c = ctx.formParam("clase");
-            int n = Integer.parseInt(ctx.formParam("nivel"));
-            int v = Integer.parseInt(ctx.formParam("vida"));
-            String mensaje = pc.agregarPersonaje(nom, c, n, v);
-            ctx.redirect("/personajes");
-        });
+        System.out.println("RPG Manager en http://localhost:7070/personajes · repositorio: "
+                + cfg.getProperty("repositorio"));
     }
 }
