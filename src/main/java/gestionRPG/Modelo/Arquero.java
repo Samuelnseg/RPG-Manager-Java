@@ -14,6 +14,6 @@ public class Arquero extends Personaje {
     @Override
     public String getClase() { return "Mago"; }
 
-    public int getMana() { return precision; }
+    public int getPrecision() { return precision; }
 }
 

@@ -1,4 +1,4 @@
-package gestionrpg.repositorio;
+package gestionRPG.Repositorio;
 
 /**
  * Error inesperado de la base de datos (conexión caída, SQL mal escrito...).

@@ -1,4 +1,4 @@
-package gestionrpg.repositorio;
+package gestionRPG.Repositorio;
 
 /**
  * Ya existe un registro con ese valor único (por ejemplo, el nombre).
